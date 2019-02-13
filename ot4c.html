@@ -1,138 +1,87 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8" />
-<title></title>
-<style type="text/css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+canvas {
+    border:1px solid #d3d3d3;
+    background-color: #f1f1f1;
+}
 </style>
 </head>
-
-
-<body onload="pallo()">
-
-<canvas id="pelialue" width="400" height="400" style="border:1px solid #000000;"q></canvas>
-<div id="pallo"></div>
-
-<p>Liiku painamalla nuolinäppäimiä </p>
-
-
+<body onload="pelinAloitus()">
 <script>
 
-var speedX
-var speedY
 
-function aloitaPeli() {
-    pallo = new component(30, 30, "red", 120);
+var pallo;
+
+function pelinAloitus() {
+    peliAlue.start();
+    pallo = new component(30, 30, "black", 0, 0);
 }
 
-function component(width, height, color, x, y) {
-    this.width = width;
-    this.height = height;
-    this.speedX = 0;
-    this.speedY = 0;
-    this.x = x;
-    this.y = y;
-    this.update = function () {
-        ctx = pelialue.context;
-        ctx.fillStyle = color;
-        ctx.fillRect(this.x, this.y, this.width, this.height);
-    }
-this.clicked = function() {
-    var myleft = this.x;
-    var myright = this.x + (this.width);
-    var mytop = this.y;
-    var mybottom = this.y + (this.height);
-    var clicked = true;
-    if ((mybottom < pelialue.y) || (mytop > pelialue.y) || (myright < pelialue.x) || 
-(myleft > pelialue.x)) {
-    clicked = false;
-  }
-    return clicked;
-    }
-}
-
-
-function updateGameArea() {
-    pelialue.clear();
-    if (pelialue.x && pelialue.y) {
-        if (myUpBtn.clicked()) {
-            pallo.y -= 1;
-        }
-        if (myDownBtn.clicked()) {
-            pallo.y += 1;
-        }
-        if (myLeftBtn.clicked()) {
-            pallo.x += -1;
-        }
-        if (myRightBtn.clicked()) {
-            pallo.x += 1;
-        }
-    }
-    myUpBtn.update();
-    myDownBtn.update();
-    myLeftBtn.update();
-    myRightBtn.update();
-    pallo.x += 1;
-    pallo.update();
-}
-
-function moveup() {
-    pallo.speedY -= 1;
-}
-
-function movedown() {
-    pallo.speedY += 1;
-}
-
-function moveleft() {
-    pallo.speedX -= 1;
-}
-
-function moveright() {
-    pallo.speedX += 1;
-}
-
-function pallo() {
-    var pallo = document.getElementById("pelialue");
-    var ctx = pallo.getContext("2d");
-    ctx.beginPath();
-    ctx.arc(95,50,40,0,2*Math.PI);
-    ctx.stroke();
-    
-}
-
-var pelialue = {
+var peliAlue = {
     canvas : document.createElement("canvas"),
     start : function() {
         this.canvas.width = 400;
         this.canvas.height = 400;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-        this.interval = setInterval(updateGameArea, 20);
-        window.addEventListener('keydown', function(e) {
-            pelialue.key = e.keyCode;
+        this.interval = setInterval(updatePeliAlue, 10);
+        window.addEventListener('keydown', function (e) {
+            peliAlue.key = e.keyCode;
         })
         window.addEventListener('keyup', function (e) {
-            pelialue.key = false;
+            peliAlue.key = false;
         })
-    },
+    }, 
     clear : function(){
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    },
+    stop : function() {
+        clearInterval(this.interval);
     }
 }
 
-function updateGameArea() {
-    pelialue.clear();
-    pallo.speedX = 0;
-    pallo.speedY = 0;
-    if (pelialue.key && pelialue.key == 37) {pallo.speedX = -1; }
-    if (pelialue.key && pelialue.key == 39) {pallo.speedX = 1; }
-    if (pelialue.key && pelialue.key == 38) {pallo.speedY = -1; }
-    if (pelialue.key && pelialue.key == 40) {pallo.speedY = 1; }
-    pallo.newPos();
-    pallo.update();
+function component(width, height, color, x, y) {
+    this.gamearea = peliAlue;
+    this.width = width;
+    this.height = height;
+    this.speedX = 0;
+    this.speedY = 0;    
+    this.x = x;
+    this.y = y;    
+    this.update = function() {
+        ctx = peliAlue.context;
+        ctx.fillStyle = color;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
     }
+    this.newPos = function() {
+        this.x += this.speedX;
+        this.y += this.speedY;        
+    }
+}
 
+
+function updatePeliAlue() {
+    peliAlue.clear();
+    pallo.speedX = 0;
+    pallo.speedY = 0;    
+    if (peliAlue.key && peliAlue.key == 37) {pallo.speedX = -1; }
+    if (peliAlue.key && peliAlue.key == 39) {pallo.speedX = 1; }
+    if (peliAlue.key && peliAlue.key == 38) {pallo.speedY = -1; }
+    if (peliAlue.key && peliAlue.key == 40) {pallo.speedY = 1; }
+    if (peliAlue.key && peliAlue.key == 32) {
+        pallo.speedX = 0;
+        pallo.speedY = 0;
+        pallo.x = 0;
+        pallo.y = 0;
+    }
+    pallo.newPos();    
+    pallo.update();
+}
 </script>
+<p>Liiku painamalla nuolinäppäimiä</p>
+<p>Painamalla välilyöntiä, pallo palautuu alkuperäiseen paikkaansa (alueen vasempaan ylänurkkaan)</p>
 </body>
 </html>
