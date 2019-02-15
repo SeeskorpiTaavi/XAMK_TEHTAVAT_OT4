@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title></title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" media="screen"/>
+</head>
+<body>
+
+    <h1 id="op.gg" src="kuvat/opgg.png" onmouseover ="kuvanVaihto('kuvat/opgg.png');"><a href="http://eune.op.gg/">op.gg</a>
+    <h1 id="Wikipedia" src="kuvat/wikipedia.png" onmouseover ="kuvanVaihto('kuvat/wikipedia.png');"><a href="https://www.wikipedia.org/">Wikipedia</a>
+    <h1 id="Google" src="kuvat/google.png" onmouseover ="kuvanVaihto('kuvat/google.png');"><a href="https://www.google.com/">Google</a></br></br>
+
+    <img id="omaAlue" src="kuvat/opgg.png" width="600" height="300"></div>
+
+<script>
+
+    function kuvanVaihto(kuva){
+        document.getElementById("omaAlue").src = kuva;
+    }
+    
+</script>
+
+</body>
+</html>
