@@ -56,10 +56,24 @@ function component(width, height, color, x, y) {
         ctx.fillStyle = color;
         ctx.fillRect(this.x, this.y, this.width, this.height);
     }
-    this.newPos = function() {
 
-        this.x += this.speedX;
-        this.y += this.speedY;        
+    this.newPos = function() {
+        if (this.x < 0) {
+            this.x = 0;
+        } else if (this.x > this.gamearea.canvas.width - this.width) {
+            this.x = this.gamearea.canvas.width - this.width;
+        }   else {
+            this.x += this.speedX;
+        }
+
+        if (this.y < 0) {
+            this.y = 0;
+        } else if (this.y > this.gamearea.canvas.height - this.height) {
+            this.y = this.gamearea.canvas.height - this.height;
+        }   else {
+            this.y += this.speedY;
+        }
+       
     }
 }
 
